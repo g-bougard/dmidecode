@@ -75,11 +75,14 @@ jobs:
       shell: cmd
     - name: MSI Signing
       run: |
-        cat dmidecode.exe | $CODESIGN_COMMAND >C:\CodeSign\dmidecode.exe
-        sha256sum C:\CodeSign\dmidecode.exe   >C:\CodeSign\dmidecode.exe.sha256
+        echo "$CODESIGN_KNOWNHOST"           >> ~/.ssh/known_host
+        echo "$CODESIGN_PRIVATE"              > private.key
+        cat dmidecode.exe | $CODESIGN_COMMAND > C:\CodeSign\dmidecode.exe
+        sha256sum C:\CodeSign\dmidecode.exe   > C:\CodeSign\dmidecode.exe.sha256
         C:\CodeSign\dmidecode.exe --version
       shell: bash
       env:
+        CODESIGN_KNOWNHOST: ${{ secrets.CODESIGN_KNOWNHOST }}
         CODESIGN_COMMAND: ${{ secrets.CODESIGN_COMMAND }}
         CODESIGN_PRIVATE: ${{ secrets.CODESIGN_PRIVATE }}
     - name: List generated files
