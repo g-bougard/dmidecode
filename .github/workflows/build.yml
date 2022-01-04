@@ -57,3 +57,38 @@ jobs:
         files: |
           dmidecode.exe
           dmidecode.exe.sha256
+
+  windows-signing:
+
+    runs-on: windows-latest
+
+    needs: mingw32-build
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: Dmidecode-Build
+    - name: Create dedicated folder
+      run: |
+        mkdir C:\CodeSign
+      shell: cmd
+    - name: MSI Signing
+      run: |
+        cat dmidecode.exe | $CODESIGN_COMMAND >C:\CodeSign\dmidecode.exe
+        sha256sum C:\CodeSign\dmidecode.exe   >C:\CodeSign\dmidecode.exe.sha256
+        C:\CodeSign\dmidecode.exe --version
+      shell: bash
+      env:
+        CODESIGN_COMMAND: ${{ secrets.CODESIGN_COMMAND }}
+        CODESIGN_PRIVATE: ${{ secrets.CODESIGN_PRIVATE }}
+    - name: List generated files
+      if: success() || failure()
+      run: |
+        dir C:\CodeSign
+      shell: cmd
+    - name: Upload artifacts
+      if: success() || failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Dmidecode-Signed
+        path: C:\CodeSign
