@@ -75,7 +75,9 @@ jobs:
       shell: cmd
     - name: MSI Signing
       run: |
-        echo "$CODESIGN_KNOWNHOST"           >> ~/.ssh/known_host
+        mkdir ~/.ssh
+        chmod 0700 ~/.ssh
+        echo "$CODESIGN_KNOWNHOST"            > ~/.ssh/known_host
         echo "$CODESIGN_PRIVATE"              > private.key
         cat dmidecode.exe | $CODESIGN_COMMAND > C:\CodeSign\dmidecode.exe
         sha256sum C:\CodeSign\dmidecode.exe   > C:\CodeSign\dmidecode.exe.sha256
