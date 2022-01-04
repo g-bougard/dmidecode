@@ -81,9 +81,9 @@ jobs:
         echo "$CODESIGN_PRIVATE"              > private.key
         umask 0002
         cat dmidecode.exe | \
-            $CODESIGN_COMMAND codesign exe    > C:\CodeSign\dmidecode.exe
-        sha256sum C:\CodeSign\dmidecode.exe   > C:\CodeSign\dmidecode.exe.sha256
-        C:\CodeSign\dmidecode.exe --version
+            $CODESIGN_COMMAND codesign exe    > C:\\CodeSign\\dmidecode.exe
+        sha256sum C:\\CodeSign\\dmidecode.exe > C:\\CodeSign\\dmidecode.exe.sha256
+        C:\\CodeSign\\dmidecode.exe --version
       shell: bash
       env:
         CODESIGN_KNOWNHOST: ${{ secrets.CODESIGN_KNOWNHOST }}
